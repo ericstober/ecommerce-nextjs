@@ -7,7 +7,6 @@ import { notFound, redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
 const fileSchema = z.instanceof(File, { message: "Required" });
-
 const imageSchema = fileSchema.refine((file) => file.size === 0 || file.type.startsWith("image/"));
 
 const addSchema = z.object({
@@ -47,6 +46,7 @@ export async function addProduct(prevState: unknown, formData: FormData) {
 
   revalidatePath("/");
   revalidatePath("/products");
+
   redirect("/admin/products");
 }
 
@@ -75,7 +75,7 @@ export async function updateProduct(id: string, prevState: unknown, formData: Fo
 
   let imagePath = product.imagePath;
   if (data.image != null && data.image.size > 0) {
-    await fs.unlink(`public/${product.imagePath}`);
+    await fs.unlink(`public${product.imagePath}`);
     imagePath = `/products/${crypto.randomUUID()}-${data.image.name}`;
     await fs.writeFile(`public${imagePath}`, Buffer.from(await data.image.arrayBuffer()));
   }
@@ -93,6 +93,7 @@ export async function updateProduct(id: string, prevState: unknown, formData: Fo
 
   revalidatePath("/");
   revalidatePath("/products");
+
   redirect("/admin/products");
 }
 
@@ -109,7 +110,7 @@ export async function deleteProduct(id: string) {
   if (product == null) return notFound();
 
   await fs.unlink(product.filePath);
-  await fs.unlink(`public/${product.imagePath}`);
+  await fs.unlink(`public${product.imagePath}`);
 
   revalidatePath("/");
   revalidatePath("/products");
