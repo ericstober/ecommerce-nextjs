@@ -1,12 +1,8 @@
 import { formatCurrency } from "@/lib/formatters";
-import { Section, Row, Column, Text, Img, Button } from "@react-email/components";
+import { Button, Column, Img, Row, Section, Text } from "@react-email/components";
 
 type OrderInformationProps = {
-  order: {
-    id: string;
-    createdAt: Date;
-    pricePaidInCents: number;
-  };
+  order: { id: string; createdAt: Date; pricePaidInCents: number };
   product: { imagePath: string; name: string; description: string };
   downloadVerificationId: string;
 };

@@ -2,9 +2,10 @@ import db from "@/db/db";
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { Resend } from "resend";
+import PurchaseReceiptEmail from "@/email/PurchaseReceipt";
 
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY as string);
-const resend = new Resend(process.env.RESEND_API_KEY);
+const resend = new Resend(process.env.RESEND_API_KEY as string);
 
 export async function POST(req: NextRequest) {
   const event = await stripe.webhooks.constructEvent(
@@ -19,15 +20,15 @@ export async function POST(req: NextRequest) {
     const email = charge.billing_details.email;
     const pricePaidInCents = charge.amount;
 
-    const product = db.product.findUnique({ where: { id: productId } });
-
-    if (product == null || email == null) return new NextResponse("Bad Request", { status: 400 });
+    const product = await db.product.findUnique({ where: { id: productId } });
+    if (product == null || email == null) {
+      return new NextResponse("Bad Request", { status: 400 });
+    }
 
     const userFields = {
       email,
       orders: { create: { productId, pricePaidInCents } },
     };
-
     const {
       orders: [order],
     } = await db.user.upsert({
@@ -38,7 +39,10 @@ export async function POST(req: NextRequest) {
     });
 
     const downloadVerification = await db.downloadVerification.create({
-      data: { productId, expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24) },
+      data: {
+        productId,
+        expiresAt: new Date(Date.now() + 1000 * 60 * 60 * 24),
+      },
     });
 
     await resend.emails.send({

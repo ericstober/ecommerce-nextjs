@@ -7,19 +7,15 @@ type PurchaseReceiptEmailProps = {
     imagePath: string;
     description: string;
   };
-  order: {
-    id: string;
-    createdAt: Date;
-    pricePaidInCents: number;
-  };
+  order: { id: string; createdAt: Date; pricePaidInCents: number };
   downloadVerificationId: string;
 };
 
 PurchaseReceiptEmail.PreviewProps = {
   product: {
     name: "Product name",
-    imagePath: "/public/products/3c76cd08-846e-4c88-b442-4ae45cd342ac-st-anger.jpeg",
-    description: "description text",
+    description: "Some description",
+    imagePath: "/products/5aba7442-e4a5-4d2e-bfa7-5bd358cdad64-02 - What Is Next.js.jpg",
   },
   order: {
     id: crypto.randomUUID(),
