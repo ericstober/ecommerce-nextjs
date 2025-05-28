@@ -86,7 +86,3 @@ Open http://localhost:3000 with your web browser to see the application.
 This project integrates Stripe for handling payments. Ensure you have a Stripe account and have set the `STRIPE_SECRET_KEY` and `STRIPE_PUBLIC_KEY` in your `.env` file.
 
 For testing purposes, you can use Stripe's test card numbers. Refer to Stripe's testing documentation for more information.
-
-## License
-
-This project is licensed under the MIT License.
